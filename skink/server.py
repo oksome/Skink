@@ -79,6 +79,14 @@ class ScriptFileHandler(tornado.web.RequestHandler):
                       'port': 8000})
 
 
+class StylesheetFileHandler(tornado.web.RequestHandler):
+    def get(self):
+        index_path = 'static/style.css' if isfile('static/style.css') \
+                     else join(STATIC_PATH, 'static/style.css')
+
+        self.write(open(index_path).read())
+
+
 class RealtimeHandler(tornado.websocket.WebSocketHandler):
     def open(self):
         print('Client connected')
@@ -130,6 +138,7 @@ settings = {
 application = tornado.web.Application([
     (r'/', IndexPageHandler),
     (r'/skink.js', ScriptFileHandler),
+    (r'/style.css', StylesheetFileHandler),
     (r'/realtime/', RealtimeHandler),
 ], **settings)
 
