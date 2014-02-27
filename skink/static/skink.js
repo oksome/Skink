@@ -10,12 +10,12 @@ $(document).ready(function() {
         ws = new MozWebSocket(websocket);
     }
     else {
-        console.log("WebSocket Not Supported");
+        alert("WebSocket Not Supported");
         return;
     }
 
     window.onbeforeunload = function(e) {
-        $("#chat").val($("#chat").val() + "Bye bye...\n");
+        console.log("Bye bye...");
         ws.close(1000, "%(username)s left the room");
 
         if (!e) e = window.event;
@@ -50,20 +50,12 @@ $(document).ready(function() {
                 ws.send("!" + callback_id + "=" + err.name + ":" + err.message);
             }
         }
-        $("#chat").val($("#chat").val() + evt.data + "\n");
+        console.log("log" + evt.data);
     };
     ws.onopen = function() {
         ws.send("%(username)s entered the room");
     };
     ws.onclose = function(evt) {
-        $("#chat").val($("#chat").val() + "Connection closed by server: " + evt.code + " \"" + evt.reason + "\"\n");
+        $("#stderr").val("Connection closed by server: " + evt.code + " \"" + evt.reason + "\"\n");
     };
-
-    $("#send").click(function() {
-        console.log($("#message").val());
-        ws.send($("#message").val());
-        //ws.send('%(username)s: ' + $('#message').val());
-        $("#message").val("");
-        return false;
-    });
 });
