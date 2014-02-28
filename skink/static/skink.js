@@ -58,4 +58,6 @@ $(document).ready(function() {
     ws.onclose = function(evt) {
         $("#stderr").val("Connection closed by server: " + evt.code + " \"" + evt.reason + "\"\n");
     };
+
+    window.skink = ws;
 });
