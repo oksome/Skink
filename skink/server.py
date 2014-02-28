@@ -65,18 +65,14 @@ class IndexPageHandler(tornado.web.RequestHandler):
                      else join(STATIC_PATH, 'static/index.html')
 
         self.write(open(index_path).read()
-                   % {'username': "User%d" % random.randint(0, 100),
-                      'host': 'localhost',
-                      'port': 8000})
+                   % {'username': "User%d" % random.randint(0, 100)})
 
 
 class ScriptFileHandler(tornado.web.RequestHandler):
     def get(self):
         self.set_header("Content-Type", "application/javascript")
         self.write(open(join(STATIC_PATH, 'static/skink.js')).read()
-                   % {'username': "User%d" % random.randint(0, 100),
-                      'host': 'localhost',
-                      'port': 8000})
+                   % {'username': "User%d" % random.randint(0, 100)})
 
 
 class StylesheetFileHandler(tornado.web.RequestHandler):

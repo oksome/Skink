@@ -1,7 +1,7 @@
 $(document).ready(function() {
     "use strict";
 
-    var websocket = "ws://%(host)s:%(port)s/realtime/";
+    var websocket = "ws://" + window.location.host + "/realtime/";
     var ws;
     if (window.WebSocket) {
         ws = new WebSocket(websocket);
