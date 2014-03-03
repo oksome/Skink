@@ -1,4 +1,4 @@
-$(document).ready(function() {
+window.onload = function() {
     "use strict";
 
     var websocket = "ws://" + window.location.host + "/realtime/";
@@ -60,4 +60,4 @@ $(document).ready(function() {
     };
 
     window.skink = ws;
-});
+};
