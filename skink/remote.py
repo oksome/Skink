@@ -19,6 +19,7 @@
 
 import threading
 import logging
+import json
 
 import skink.server as server
 
@@ -45,7 +46,7 @@ class JSObject(object):
                 server.CALLBACKS[str(id(value))] = value
                 value = '''function() {
                     console.log('$%s');
-                    ws.send('$%s');
+                    ws.send('{"action": "callback", "callback": "%s"}');
                 }
                 ''' % (str(id(value)), str(id(value)))
             command = self._command + '.' + name + ' = ' + value + ';'
