@@ -75,3 +75,7 @@ Known issues and future development
 * Only a single page is supported yet
 * No arguments can be passed to Python callbacks from JS
 * There is no sync, clients who connect late will only get the future instructions
+
+![Skink photo](https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Garden_skink.jpg/800px-Garden_skink.jpg)
+
+Photo of a garden Skink, Credits [Fir0002/Flagstaffotos](https://commons.wikimedia.org/wiki/File:Garden_skink.jpg)
