@@ -9,12 +9,12 @@ Dependencies: Python 3, Tornado
 pip install skink
 ```
 
-What it does
+Description
 ---
 
 Skink uses Tornado and Websockets to give Python an access to the DOM of all connected users, and get your Python functions called when something is happening on the web page.
 
-Example
+Howto
 ---
 
 Tip: launch with `python -i sample.py` to keep playing with Skink in the Pythin interpreter.
