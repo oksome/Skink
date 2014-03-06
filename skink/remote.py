@@ -46,7 +46,7 @@ class JSObject(object):
                 server.CALLBACKS[str(id(value))] = value
                 value = '''function() {
                     console.log('$%s');
-                    ws.send('{"action": "callback", "callback": "%s"}');
+                    skink.call("%s");
                 }
                 ''' % (str(id(value)), str(id(value)))
             command = self._command + '.' + name + ' = ' + value + ';'
