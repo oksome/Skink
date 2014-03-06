@@ -20,6 +20,7 @@
 import random
 import threading
 import logging
+import json
 
 import tornado.httpserver
 import tornado.websocket
@@ -37,26 +38,16 @@ STATIC_PATH = dirname(realpath(__file__))
 print('STATIC_PATH', [STATIC_PATH])
 
 
-def parse(prefix, result):
-    '''
-    Parses the result from JS message, transforms type and raises
-    the appropriate exception if required.
-    '''
-    if prefix == '?':
-        jstype, value = result.split(':', 1)
-        mapping = {
-            'number': float,
-        }
-        return mapping.get(jstype, str)(value)
-    elif prefix == '!':
-        error_name, error_message = result.split(':', 1)
-        mapping = {
-            'ReferenceError': NameError,
-        }
-        if error_name in mapping:
-            raise mapping[error_name](error_message)
-        else:
-            raise Exception('{}: {}'.format(error_name, error_message))
+def launch_exception(message):
+    error_name = message['name']
+    error_descr = message['description']
+    mapping = {
+        'ReferenceError': NameError,
+    }
+    if message['name'] in mapping:
+        raise mapping[error_name](error_descr)
+    else:
+        raise Exception('{}: {}'.format(error_name, error_descr))
 
 
 class IndexPageHandler(tornado.web.RequestHandler):
@@ -91,14 +82,16 @@ class RealtimeHandler(tornado.websocket.WebSocketHandler):
     def on_message(self, message):
         logging.debug(('on_message', message))
 
-        # Execute a callback:
-        if message.startswith('$'):
-            logging.debug('$')
-            callback_id = message[1:]
+        msg = json.loads(message)
+
+        if msg['action'] == 'callback':
+            logging.debug('callback')
+            callback_id = msg['callback']
             if callback_id in CALLBACKS:
                 logging.debug(('calling callback in a thread:', callback_id))
                 callback = CALLBACKS[callback_id]
-                threading.Thread(target=callback, args=()).start()
+                args = msg.get('args', ())
+                threading.Thread(target=callback, args=args).start()
                 logging.debug('done (in a thread)')
                 self.write_message('done')
             else:
@@ -106,12 +99,12 @@ class RealtimeHandler(tornado.websocket.WebSocketHandler):
                 self.write_message('unknown callback')
 
         # Return value (or exception) from an eval:
-        elif message.startswith('?') or message.startswith('!'):
-            logging.debug(message[0])
-            callback_id, result = message[1:].split('=', 1)
-            logging.debug(('callback_id', callback_id, 'result', result))
+        elif msg['action'] == 'eval':
+            callback_id = msg['callback']
+            value = msg['value']
+            logging.debug(('callback_id', callback_id, 'value', value))
             if callback_id in EVALUATIONS:
-                RESULTS[callback_id] = lambda: parse(message[0], result)
+                RESULTS[callback_id] = lambda: value
                 EVALUATIONS[callback_id].set()
                 logging.debug('gone')
                 self.write_message('gone')
@@ -119,6 +112,15 @@ class RealtimeHandler(tornado.websocket.WebSocketHandler):
                 logging.debug('unknown callback')
                 self.write_message('unknown callback')
 
+        elif msg['action'] == 'exception':
+            callback_id = msg['callback']
+            logging.warn("Exception")
+            if callback_id in EVALUATIONS:
+                RESULTS[callback_id] = lambda: launch_exception(msg)
+                EVALUATIONS[callback_id].set()
+            else:
+                logging.debug('unknown callback')
+                self.write_message('unknown callback')
         else:
             logging.debug('not found')
             self.write_message('not found')

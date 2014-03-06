@@ -62,21 +62,43 @@ window.onload = function() {
             try {
                 var result = eval(command);
                 console.log("result = [" + result + "]");
-                ws.send("?" + callback_id + "=" + typeof(result) + ":" + result);
+                //ws.send("?" + callback_id + "=" + typeof(result) + ":" + result);
+                ws.send(JSON.stringify({
+                    "action": "eval",
+                    "callback": callback_id,
+                    "value": result
+                    }));
             }
             catch(err) {
                 console.log("error : " + err.name + err.message);
-                ws.send("!" + callback_id + "=" + err.name + ":" + err.message);
+                ws.send(JSON.stringify({
+                    "action": "exception",
+                    "callback": callback_id,
+                    "name": err.name,
+                    "description": err.message
+                    }))
             }
         }
         console.log("log" + evt.data);
     };
     ws.onopen = function() {
-        ws.send("%(username)s entered the room");
+        ws.send(JSON.stringify({
+            "action": "info",
+            "message": "%(username)s entered the room"
+        }))
     };
     ws.onclose = function(evt) {
-        $("#stderr").val("Connection closed by server: " + evt.code + " \"" + evt.reason + "\"\n");
+        document.getElementById("stderr").innerHTML = "Connection closed by server: " + evt.code + " \"" + evt.reason + "\"\n";
     };
 
-    window.skink = ws;
+    window.skink = {
+        ws: ws,
+        call: function(name, args=[]) {
+            this.ws.send(JSON.stringify({
+                action: "callback",
+                callback: name,
+                args: args
+            }))
+        }
+    };
 };
