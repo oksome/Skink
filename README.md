@@ -9,6 +9,11 @@ Dependencies: Python 3, Tornado
 pip install skink
 ```
 
+Under development
+---
+
+Skink is a working demo, and some important features are still missing.
+
 Description
 ---
 
