@@ -9,10 +9,10 @@ Dependencies: Python 3, Tornado
 pip install skink
 ```
 
-Under development
+Proof of Concept
 ---
 
-Skink is a working demo, and some important features are still missing.
+Skink is a Proof of Concept and under development. Even when stable and ready, there will still be plenty of good reasons not to use it in production.
 
 Description
 ---
