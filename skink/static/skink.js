@@ -91,5 +91,14 @@ window.onload = function() {
         document.getElementById("stderr").innerHTML = "Connection closed by server: " + evt.code + " \"" + evt.reason + "\"\n";
     };
 
-    window.skink = ws;
+    window.skink = {
+        ws: ws,
+        call: function(name, args) {
+            this.ws.send(JSON.stringify({
+                action: "callback",
+                callback: name,
+                args: args
+            }))
+        }
+    };
 };

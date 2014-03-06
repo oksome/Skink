@@ -90,7 +90,8 @@ class RealtimeHandler(tornado.websocket.WebSocketHandler):
             if callback_id in CALLBACKS:
                 logging.debug(('calling callback in a thread:', callback_id))
                 callback = CALLBACKS[callback_id]
-                threading.Thread(target=callback, args=()).start()
+                args = msg.get('args', ())
+                threading.Thread(target=callback, args=args).start()
                 logging.debug('done (in a thread)')
                 self.write_message('done')
             else:
