@@ -68,11 +68,11 @@ class JSObject(object):
 
 class RemotePage(object):
 
-    def __init__(self, name):
+    def __init__(self, path):
         '''
             remote: object used to access remote JS code.
         '''
-        self.name = name
+        self.path = path
         self.document = JSObject('document', self)
         self.window = JSObject('window', self)
         self.alert = JSObject('alert', self)
