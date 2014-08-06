@@ -29,7 +29,7 @@ import tornado.web
 
 from os.path import dirname, realpath, join, isfile
 
-LISTENERS = []
+LISTENERS = {}
 CALLBACKS = {}
 EVALUATIONS = {}
 RESULTS = {}
@@ -76,8 +76,9 @@ class StylesheetFileHandler(tornado.web.RequestHandler):
 
 class RealtimeHandler(tornado.websocket.WebSocketHandler):
     def open(self):
-        print('Client connected')
-        LISTENERS.append(self)
+        path = self.page_path()
+        listeners = LISTENERS[path] = LISTENERS.get(path, [])
+        listeners.append(self)
 
     def on_message(self, message):
         logging.debug(('on_message', message))
@@ -126,7 +127,10 @@ class RealtimeHandler(tornado.websocket.WebSocketHandler):
             self.write_message('not found')
 
     def on_close(self):
-        LISTENERS.remove(self)
+        LISTENERS[self.page_path()].remove(self)
+
+    def page_path(self):
+        return self.request.uri.split('?', 1)[1]
 
 
 settings = {
@@ -135,6 +139,8 @@ settings = {
 
 application = tornado.web.Application([
     (r'/', IndexPageHandler),
+    (r'/alice', IndexPageHandler),
+    (r'/bob', IndexPageHandler),
     (r'/skink.js', ScriptFileHandler),
     (r'/style.css', StylesheetFileHandler),
     (r'/realtime/', RealtimeHandler),

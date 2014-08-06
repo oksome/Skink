@@ -80,7 +80,7 @@ class RemotePage(object):
 
     def run(self, command):
         logging.info(('run', [command]))
-        for listener in server.LISTENERS:
+        for listener in server.LISTENERS.get(self.path, []):
             logging.debug(('listener:', listener))
             listener.write_message('$' + command)
 
@@ -95,7 +95,7 @@ class RemotePage(object):
 
         message = '?' + job_id + '=' + command
         logging.info(('message:', [message]))
-        for listener in server.LISTENERS:
+        for listener in server.LISTENERS.get(self.path, []):
             logging.debug(('listener:', listener))
             listener.write_message(message)
 

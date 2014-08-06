@@ -20,7 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 window.onload = function() {
     "use strict";
 
-    var websocket = "ws://" + window.location.host + "/realtime/";
+    var websocket = "ws://" + window.location.host + "/realtime/?" + location.pathname;
     var ws;
     if (window.WebSocket) {
         ws = new WebSocket(websocket);
