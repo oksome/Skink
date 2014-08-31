@@ -22,7 +22,7 @@ from setuptools import setup
 
 
 setup(name='Skink',
-      version='0.6.1',
+      version='0.6.2',
       description='Control the DOM from Python using Websockets',
       author='OKso.me',
       author_email='@okso.me',
