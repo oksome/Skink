@@ -19,7 +19,7 @@ Description
 
 Skink uses Tornado and Websockets to give Python an access to the DOM of all connected users, and get your Python functions called when something is happening on the web page. It also has a blocking mode you can use to get the value of an element without using callbacks.
 
-Skink will keep an open Websocket connection to every browser, and generate Javascript code for the to execute from your Python instructions. It does so in a lazy way and avoids unnecessary roundtrips with the browser. For example, the following two instructions will only result in one instruction being sent to the browser:
+Skink will keep an open Websocket connection to every browser, and generate Javascript code for the browser to execute from your Python instructions. It does so in a lazy way and avoids unnecessary roundtrips with the browser. For example, the following two instructions will only result in one instruction being sent to the browser:
 
 ```
 page.document.getElementById('hello').innerHTML = "Hello You"
@@ -38,7 +38,7 @@ This is done by creating intermediate `skink.remote.JSObject` objects that disti
 Howto
 ---
 
-Tip: launch with `python -i sample.py` to keep playing with Skink in the Pythin interpreter.
+Tip: launch with `python -i sample.py` to keep playing with Skink in the Python interpreter.
 
 ```python
 import skink.server as server
@@ -73,13 +73,6 @@ assert a == 42
 # Wait for quitting
 input("Press Enter to quit.")
 ```
-
-Known issues and future development
----
-
-* Only a single page is supported yet
-* No arguments can be passed to Python callbacks from JS
-* There is no sync, clients who connect late will only get the future instructions
 
 ![Skink photo](https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Garden_skink.jpg/800px-Garden_skink.jpg)
 
