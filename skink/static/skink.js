@@ -17,7 +17,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-window.onload = function() {
+setup_skink_websocket = function() {
     "use strict";
 
     var websocket = "ws://" + window.location.host + "/realtime/?" + location.pathname;
@@ -89,6 +89,11 @@ window.onload = function() {
     };
     ws.onclose = function(evt) {
         document.getElementById("stderr").innerHTML = "Connection closed by server: " + evt.code + " \"" + evt.reason + "\"\n";
+
+         setTimeout(function () {
+            // Connection has closed so try to reconnect every 3 seconds.
+            setup_skink_websocket();
+        }, 3*1000);
     };
 
     window.skink = {
@@ -102,3 +107,5 @@ window.onload = function() {
         }
     };
 };
+
+window.onload = setup_skink_websocket()
