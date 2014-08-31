@@ -31,6 +31,8 @@ page.document.getElementById('hello').innerHTML = page.document.getElementById('
 
 This is done by creating intermediate `skink.remote.JSObject` objects that distinguish between basic types, other JSObjects and callable objects.
 
+Skink integrates with the [Bottle Web Framework](http://bottlepy.org/) for exposing standard HTTP resources.
+
 Advanced Features
 ---
 
@@ -70,7 +72,7 @@ Run arbitrary Javascript code in a page's clients:
 page.run("alert('Hello!');")
 ```
 
-Howto
+Example
 ---
 
 Tip: launch with `python -i sample.py` to keep playing with Skink in the Python interpreter.
@@ -79,34 +81,70 @@ Tip: launch with `python -i sample.py` to keep playing with Skink in the Python 
 import skink.server as server
 import skink.remote as remote
 
-# Start Skink's Tornado server in another thread:
-import threading
-threading.Thread(target=server.start, args=()).start()
+from bottle import Bottle
 
-# Get access to the remote page:
-page = remote.RemotePage('/')
+# Define the static HTTP views with Bottle.py
+b = Bottle()
 
-# Wait for a client to connect:
-input("Start doing crazy stuff ?")
+@b.get('/alice')
+@b.get('/bob')
+def alice():
+    return '''
+        <html>
+            <head>
+                <meta charset="utf-8" />
+            </head>
+            <body>
+                <h1>My super simple chat</h1>
 
-# This will send the corresponding JS instruction to be executed in all connected browsers
-page.document.getElementById('hello').innerHTML = "Hello You"
+                <div id='stderr'></div>
 
-# Here, we define a callback on a DOM element:
+                <div id='hello'>
+                    Hello !
+                </div>
+                <div id='hello2'>
+                    Hello2 !
+                </div>
 
-def callback():
-    print('You called a callback')
+                <div>
+                    <input id='message' />
+                </div>
 
-page.document.getElementById('hello').onclick = callback
+                <script type='application/javascript' src='/skink/skink.js'></script>
+            </body>
+        </html>
+    '''
 
-# You can also evaluate the content of the DOM:
+# Start the web(socket) server with the Bottle app:
+server.start_thread(b)
 
-page.run('window.a = 42')
-a = page.eval('a')
-assert a == 42
+# Define the remote pages you want to control:
+alice = remote.RemotePage('/alice')
+bob = remote.RemotePage('/bob')
 
-# Wait for quitting
-input("Press Enter to quit.")
+# Define the Python callbacks.
+def alice_keypress():
+    z = alice.document.getElementById('message').value._eval()
+    bob.document.getElementById('hello2').innerHTML = 'Alice says: ' + z
+
+
+def bob_keypress():
+    z = bob.document.getElementById('message').value._eval()
+    alice.document.getElementById('hello2').innerHTML = 'Bob says: ' + z
+
+# Register the callbacks every time a client connects:
+@alice.on_open
+def alice_open():
+    alice.document.getElementById('hello').innerHTML = "Hello Alice"
+    alice.document.getElementById('message').onkeypress = alice_keypress
+
+
+@bob.on_open
+def bob_open():
+    bob.document.getElementById('hello').innerHTML = "Hello Bob"
+    bob.document.getElementById('message').onkeypress = bob_keypress
+
+print("Open your browser on pages http://localhost:8000/alice and http://localhost:8000/bob")
 ```
 
 ![Skink photo](https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Garden_skink.jpg/800px-Garden_skink.jpg)
