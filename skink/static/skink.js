@@ -82,13 +82,15 @@ setup_skink_websocket = function() {
         console.log("log" + evt.data);
     };
     ws.onopen = function() {
+        document.getElementById("stderr").innerHTML = "";
+
         ws.send(JSON.stringify({
             "action": "info",
             "message": "%(username)s entered the room"
         }))
     };
     ws.onclose = function(evt) {
-        document.getElementById("stderr").innerHTML = "Connection closed by server: " + evt.code + " \"" + evt.reason + "\"\n";
+        document.getElementById("stderr").innerHTML = "Connection closed by server " + evt.reason + "\n";
 
          setTimeout(function () {
             // Connection has closed so try to reconnect every 3 seconds.
