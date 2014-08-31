@@ -51,15 +51,6 @@ def launch_exception(message):
         raise Exception('{}: {}'.format(error_name, error_descr))
 
 
-class IndexPageHandler(tornado.web.RequestHandler):
-    def get(self):
-        index_path = 'static/index.html' if isfile('static/index.html') \
-                     else join(STATIC_PATH, 'static/index.html')
-
-        self.write(open(index_path).read()
-                   % {'username': "User%d" % random.randint(0, 100)})
-
-
 class ScriptFileHandler(tornado.web.RequestHandler):
     def get(self):
         self.set_header("Content-Type", "application/javascript")
@@ -147,7 +138,6 @@ def start(bottle_app):
     from skink.bottle_tornadosocket import TornadoWebSocketServer
 
     tornado_handlers = [
-        (r'/', IndexPageHandler),
         (r'/skink/skink.js', ScriptFileHandler),
         (r'/skink/style.css', StylesheetFileHandler),
         (r'/skink/socket', RealtimeHandler),
