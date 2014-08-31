@@ -22,14 +22,14 @@ from setuptools import setup
 
 
 setup(name='Skink',
-      version='0.6',
+      version='0.6.1',
       description='Control the DOM from Python using Websockets',
       author='OKso.me',
       author_email='@okso.me',
       url='https://github.com/oksome/Skink/',
       packages=['skink'],
       package_data={'skink': ['static/index.html', 'static/skink.js', 'static/style.css']},
-      install_requires=['tornado'],
+      install_requires=['tornado', 'bottle'],
       license='AGPLv3',
       keywords="websockets javascript injection dom",
       classifiers=['Development Status :: 3 - Alpha',
