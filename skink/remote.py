@@ -119,3 +119,8 @@ class RemotePage(object):
             window.skink.%s = function(args=[]) {
                 window.skink.call("%s", args);
             }''' % (name, name))
+
+    def on_open(self, function):
+        handlers = server.OPEN_HANDLERS.get(self.path, [])
+        handlers.append(function)
+        server.OPEN_HANDLERS[self.path] = handlers

@@ -33,6 +33,7 @@ LISTENERS = {}
 CALLBACKS = {}
 EVALUATIONS = {}
 RESULTS = {}
+OPEN_HANDLERS = {}
 
 STATIC_PATH = dirname(realpath(__file__))
 print('STATIC_PATH', [STATIC_PATH])
@@ -77,8 +78,12 @@ class StylesheetFileHandler(tornado.web.RequestHandler):
 class RealtimeHandler(tornado.websocket.WebSocketHandler):
     def open(self):
         path = self.page_path()
+        # Register as global listener
         listeners = LISTENERS[path] = LISTENERS.get(path, [])
         listeners.append(self)
+        # Setup new client:
+        for handler in OPEN_HANDLERS.get(path, []):
+            handler()
 
     def on_message(self, message):
         logging.debug(('on_message', message))
