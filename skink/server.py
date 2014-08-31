@@ -148,9 +148,9 @@ def start(bottle_app):
 
     tornado_handlers = [
         (r'/', IndexPageHandler),
-        (r'/skink.js', ScriptFileHandler),
-        (r'/style.css', StylesheetFileHandler),
-        (r'/realtime/', RealtimeHandler),
+        (r'/skink/skink.js', ScriptFileHandler),
+        (r'/skink/style.css', StylesheetFileHandler),
+        (r'/skink/socket', RealtimeHandler),
     ]
     bottle_app.run(port=8080, reloader=True,
         server=TornadoWebSocketServer, handlers=tornado_handlers)

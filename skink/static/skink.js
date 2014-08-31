@@ -20,7 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 setup_skink_websocket = function() {
     "use strict";
 
-    var websocket = "ws://" + window.location.host + "/realtime/?" + location.pathname;
+    var websocket = "ws://" + window.location.host + "/skink/socket?" + location.pathname;
     var ws;
     if (window.WebSocket) {
         ws = new WebSocket(websocket);

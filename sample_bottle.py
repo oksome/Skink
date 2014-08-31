@@ -39,10 +39,12 @@ def alice():
         <html>
             <head>
                 <meta charset="utf-8" />
-                <link rel="stylesheet" type="text/css" href="/style.css">
+                <link rel="stylesheet" type="text/css" href="/skink/style.css">
             </head>
             <body>
                 <h1>My super simple chat</h1>
+
+                <div id='stderr'></div>
 
                 <div id='hello'>
                     Hello !
@@ -55,7 +57,7 @@ def alice():
                     <input id='message' />
                 </div>
 
-                <script type='application/javascript' src='/skink.js'></script>
+                <script type='application/javascript' src='/skink/skink.js'></script>
             </body>
         </html>
     '''
