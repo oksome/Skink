@@ -148,8 +148,6 @@ def start(bottle_app):
 
     tornado_handlers = [
         (r'/', IndexPageHandler),
-        (r'/alice', IndexPageHandler),
-        (r'/bob', IndexPageHandler),
         (r'/skink.js', ScriptFileHandler),
         (r'/style.css', StylesheetFileHandler),
         (r'/realtime/', RealtimeHandler),
