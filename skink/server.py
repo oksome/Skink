@@ -137,17 +137,21 @@ settings = {
     'auto_reload': True,
 }
 
-application = tornado.web.Application([
-    (r'/', IndexPageHandler),
-    (r'/alice', IndexPageHandler),
-    (r'/bob', IndexPageHandler),
-    (r'/skink.js', ScriptFileHandler),
-    (r'/style.css', StylesheetFileHandler),
-    (r'/realtime/', RealtimeHandler),
-], **settings)
+
+def start(bottle_app):
+    from skink.bottle_tornadosocket import TornadoWebSocketServer
+
+    tornado_handlers = [
+        (r'/', IndexPageHandler),
+        (r'/alice', IndexPageHandler),
+        (r'/bob', IndexPageHandler),
+        (r'/skink.js', ScriptFileHandler),
+        (r'/style.css', StylesheetFileHandler),
+        (r'/realtime/', RealtimeHandler),
+    ]
+    bottle_app.run(port=8080, reloader=True,
+        server=TornadoWebSocketServer, handlers=tornado_handlers)
 
 
-def start():
-    http_server = tornado.httpserver.HTTPServer(application)
-    http_server.listen(8000)
-    tornado.ioloop.IOLoop.instance().start()
+def start_thread(bottle_app):
+    threading.Thread(target=start, args=(bottle_app, )).start()
