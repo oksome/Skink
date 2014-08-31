@@ -21,19 +21,54 @@ Skink uses Tornado and Websockets to give Python an access to the DOM of all con
 
 Skink will keep an open Websocket connection to every browser, and generate Javascript code for the browser to execute from your Python instructions. It does so in a lazy way and avoids unnecessary roundtrips with the browser. For example, the following two instructions will only result in one instruction being sent to the browser:
 
-```
+```python
 page.document.getElementById('hello').innerHTML = "Hello You"
 ```
 
-```
+```python
 page.document.getElementById('hello').innerHTML = page.document.getElementById('hello2').innerHTML
 ```
 
-```
-page.document.getElementById('hello').onclick = py_callback_function
+This is done by creating intermediate `skink.remote.JSObject` objects that distinguish between basic types, other JSObjects and callable objects.
+
+Advanced Features
+---
+
+Register Python callbacks directly on JavaScript events:
+
+```python
+def my_python_function():
+    print("Hello from Python")
+
+page.document.getElementById('hello').onclick = my_python_function
 ```
 
-This is done by creating intermediate `skink.remote.JSObject` objects that distinguish between basic types, other JSObjects and callable objects.
+Decorate functions that have to be called everytime a new client connects to a page:
+
+```python
+@page.on_open
+def page_open():
+    bob.document.getElementById('hello').innerHTML = "Hello You"
+    bob.document.getElementById('message').onkeypress = my_python_function
+```
+
+Expose arbitrary Python functions to Javascript clients:
+
+```python
+def my_python_sum(a, b):
+    print(a + b)
+
+page.register(my_python_function, 'my_function')
+```
+From Javascript:
+```javascript
+skink.call('sum', [1, 2]);
+```
+
+Run arbitrary Javascript code in a page's clients:
+```python
+page.run("alert('Hello!');")
+```
 
 Howto
 ---
