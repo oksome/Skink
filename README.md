@@ -3,7 +3,7 @@ Skink
 
 Control the DOM from Python using Websockets
 
-Dependencies: Python 3, Tornado
+Dependencies: Python 3, Tornado, Bottle
 
 ```
 pip install skink
