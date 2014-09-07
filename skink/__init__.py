@@ -18,5 +18,5 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 __author__ = "OKso http://okso.me"
-__version__ = "0.6.2"
+__version__ = "0.6.3"
 
