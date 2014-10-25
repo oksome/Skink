@@ -40,6 +40,13 @@ print('STATIC_PATH', [STATIC_PATH])
 
 
 def launch_exception(message):
+    """
+        Launch a Python exception from an error that took place in the browser.
+
+        messsage format:
+        - name: str
+        - description: str
+    """
     error_name = message['name']
     error_descr = message['description']
     mapping = {
