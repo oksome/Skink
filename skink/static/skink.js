@@ -100,7 +100,7 @@ setup_skink_websocket = function() {
 
     window.skink = {
         ws: ws,
-        call: function(name, args=[]) {
+        call: function(name, args) {
             this.ws.send(JSON.stringify({
                 action: "callback",
                 callback: name,
