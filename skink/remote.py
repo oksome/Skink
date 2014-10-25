@@ -65,6 +65,10 @@ class JSObject(object):
     def _eval(self):
         return self._page.eval(self._command)
 
+    def __add__(self, other):
+        assert type(other) == JSObject
+        return JSObject(self._command + ' + ' + other._command, self._page)
+
 
 class RemotePage(object):
 
