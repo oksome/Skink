@@ -18,6 +18,11 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 
+"""
+Catalog of ECMAScript attributes for autocompletion on Skink page objects.
+"""
+
+
 attributes = {
     'document': [
         'getElementById',
