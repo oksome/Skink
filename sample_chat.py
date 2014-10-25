@@ -34,7 +34,8 @@ threading.Thread(target=server.start, args=()).start()
 
 # Second, we wait for Alice and Bob to connect on the page:
 
-print("Open your browser on pages http://localhost:8000/alice and http://localhost:8000/bob")
+print("Open your browser on pages http://localhost:8000/alice "
+      "and http://localhost:8000/bob")
 
 print('Waiting for clients on pages /alice and /bob ...')
 import time
@@ -53,13 +54,22 @@ bob = remote.RemotePage('/bob')
 alice.document.getElementById('hello').innerHTML = "Hello Alice"
 bob.document.getElementById('hello').innerHTML = "Hello Bob"
 
+
 def alice_keypress():
     z = alice.document.getElementById('message').value._eval()
     bob.document.getElementById('hello2').innerHTML = z
+
 
 def bob_keypress():
     z = bob.document.getElementById('message').value._eval()
     alice.document.getElementById('hello2').innerHTML = z
 
-alice.document.getElementById('message').onkeypress = alice_keypress
-bob.document.getElementById('message').onkeypress = bob_keypress
+
+@alice.on_open
+def setup_alice():
+    alice.document.getElementById('message').onkeypress = alice_keypress
+
+
+@bob.on_open
+def setup_bob():
+    bob.document.getElementById('message').onkeypress = bob_keypress
