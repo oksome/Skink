@@ -76,7 +76,7 @@ setup_skink_websocket = function() {
                     "callback": callback_id,
                     "name": err.name,
                     "description": err.message
-                    }))
+                    }));
             }
         }
         console.log("log" + evt.data);
