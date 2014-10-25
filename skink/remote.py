@@ -24,6 +24,15 @@ import json
 import skink.server as server
 
 
+def to_js_string(target):
+    if type(target) in (str, int, float, bool):
+        return json.dumps(target)
+    elif type(target) == JSObject:
+        return JSObject._command
+    else:
+        raise TypeError("{} cannot be converted to JS".format(target))
+
+
 class JSObject(object):
 
     def __init__(self, name, page):
@@ -54,20 +63,36 @@ class JSObject(object):
             self._page.run(command)
 
     def __call__(self, *args, **kwargs):
+        """
+            Return a JSObject that represents the call of the object with
+            the given parameters.
+        """
         # Converting args to strings, or adding quotes if strings:
-        args = ['"' + arg + '"' if type(arg) == str else str(arg) for arg in args]
-        command = self._command + '(' + ', '.join(args) + ')'
+        args = [to_js_string(arg) for arg in args]
+        command = "{}({})".format(self._command, ', '.join(args))
         return JSObject(command, self._page)
 
+    def __add__(self, other):
+        """
+            Returns a JSObject that represents the result of the addition
+            of two JSObjects.
+        """
+        return JSObject(
+            "( {} + {} )".format(self._command, to_js_string(other)),
+            self._page)
+
     def _run(self):
+        """
+            Send the command to be executed by all connected clients.
+        """
         return self._page.run(self._command)
 
     def _eval(self):
+        """
+            Return the value of the element in the first connected client
+            in a blocking manner.
+        """
         return self._page.eval(self._command)
-
-    def __add__(self, other):
-        assert type(other) == JSObject
-        return JSObject(self._command + ' + ' + other._command, self._page)
 
 
 class RemotePage(object):
