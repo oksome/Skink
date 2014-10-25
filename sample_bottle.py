@@ -32,6 +32,7 @@ import skink.remote as remote
 from bottle import Bottle
 b = Bottle()
 
+
 @b.get('/alice')
 @b.get('/bob')
 def alice():
@@ -57,16 +58,18 @@ def alice():
                     <input id='message' />
                 </div>
 
-                <script type='application/javascript' src='/skink/skink.js'></script>
+                <script type='application/javascript' src='/skink/skink.js'>
+                </script>
             </body>
         </html>
     '''
 
-server.start_thread(b)
+server.start_thread(b, port=9000)
 
 # Second, we wait for Alice and Bob to connect on the page:
 
-print("Open your browser on pages http://localhost:8000/alice and http://localhost:8000/bob")
+print("Open your browser on pages http://localhost:8000/alice "
+      "and http://localhost:8000/bob")
 
 # Finally, we register the input fields of Alice and Bob to send messages
 # to each other by replacing the content of a div.
