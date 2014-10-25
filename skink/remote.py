@@ -29,7 +29,7 @@ def to_js_string(target):
     if type(target) in (str, int, float, bool):
         return json.dumps(target)
     elif type(target) == JSObject:
-        return JSObject._command
+        return target._command
     else:
         raise TypeError("{} cannot be converted to JS".format(target))
 
