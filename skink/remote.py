@@ -22,6 +22,7 @@ import logging
 import json
 
 import skink.server as server
+from skink.catalog import attributes
 
 
 def to_js_string(target):
@@ -35,9 +36,17 @@ def to_js_string(target):
 
 class JSObject(object):
 
-    def __init__(self, name, page):
+    def __init__(self, name, page, attributes=None):
+        """
+            Representat a new Javascript object.
+
+            :param name: Name of the object.
+            :param page: Reference to the RemotePage.
+            :param dir: Additional fiels in dir(self).
+        """
         self._command = name
         self._page = page
+        self._attributes = attributes if attributes else []
 
     def __getattr__(self, name):
         return JSObject(self._command + '.' + name, self._page)
@@ -61,6 +70,9 @@ class JSObject(object):
             command = self._command + '.' + name + ' = ' + value + ';'
             logging.debug(('__setattr__', name, value, command))
             self._page.run(command)
+
+    def __dir__(self):
+        return super().__dir__() + self._attributes
 
     def __call__(self, *args, **kwargs):
         """
@@ -102,10 +114,14 @@ class RemotePage(object):
             remote: object used to access remote JS code.
         '''
         self.path = path
-        self.document = JSObject('document', self)
-        self.window = JSObject('window', self)
-        self.alert = JSObject('alert', self)
-        self.prompt = JSObject('prompt', self)
+        self.document = JSObject('document', self,
+                                 attributes.get('document'))
+        self.window = JSObject('window', self,
+                               attributes.get('window'))
+        self.alert = JSObject('alert', self,
+                              attributes.get('alert'))
+        self.prompt = JSObject('prompt', self,
+                               attributes.get('prompt'))
 
     def run(self, command):
         logging.info(('run', [command]))
