@@ -56,7 +56,7 @@ setup_skink_websocket = function() {
             var command = evt.data.substr(1).split("=", 2);
             console.log("raw command = [ " + command + " ]");
             var callback_id = command[0];
-            var command = command[1];
+            command = command[1];
             console.log("callback_id = [ " + callback_id + " ]");
             console.log("processed command = [ " + command + " ]");
             try {
@@ -87,7 +87,7 @@ setup_skink_websocket = function() {
         ws.send(JSON.stringify({
             "action": "info",
             "message": "%(username)s entered the room"
-        }))
+        }));
     };
     ws.onclose = function(evt) {
         document.getElementById("stderr").innerHTML = "Connection closed by server " + evt.reason + "\n";
@@ -105,9 +105,9 @@ setup_skink_websocket = function() {
                 action: "callback",
                 callback: name,
                 args: args
-            }))
+            }));
         }
     };
 };
 
-window.onload = setup_skink_websocket()
+window.onload = setup_skink_websocket();
