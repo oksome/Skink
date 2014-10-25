@@ -139,11 +139,13 @@ tornado_handlers = [
     (r'/skink/socket', RealtimeHandler),
 ]
 
+
 def start(bottle_app=None, port=8080, reloader=False):
 
     if bottle_app:
         from skink.bottle_tornadosocket import TornadoWebSocketServer
-        bottle_app.run(port=port, reloader=reloader,
+        bottle_app.run(
+            port=port, reloader=reloader,
             server=TornadoWebSocketServer, handlers=tornado_handlers)
     else:
         application = tornado.web.Application(tornado_handlers, **settings)
