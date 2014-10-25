@@ -19,16 +19,18 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from setuptools import setup
-
+from skink import __version__
 
 setup(name='Skink',
-      version='0.6.3',
+      version=__version__,
       description='Control the DOM from Python using Websockets',
       author='OKso.me',
       author_email='@okso.me',
       url='https://github.com/oksome/Skink/',
       packages=['skink'],
-      package_data={'skink': ['static/index.html', 'static/skink.js', 'static/style.css']},
+      package_data={'skink': ['static/index.html',
+                              'static/skink.js',
+                              'static/style.css']},
       install_requires=['tornado', 'bottle'],
       license='AGPLv3',
       keywords="websockets javascript injection dom",
