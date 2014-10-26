@@ -63,11 +63,11 @@ Expose arbitrary Python functions to Javascript clients:
 def my_python_sum(a, b):
     print(a + b)
 
-page.register(my_python_function, 'my_function')
+page.register(my_python_function, 'py_sum')
 ```
 From Javascript:
 ```javascript
-skink.call('sum', [1, 2]);
+skink.call('py_sum', [1, 2]);
 ```
 
 Run arbitrary Javascript code in a page's clients:
