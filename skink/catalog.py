@@ -27,5 +27,8 @@ attributes = {
     'document': [
         'getElementById',
         'getElementsByTagName',
+    ],
+    'window': [
+        'location',
     ]
 }
