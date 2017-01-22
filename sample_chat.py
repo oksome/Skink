@@ -34,8 +34,8 @@ threading.Thread(target=server.start, args=()).start()
 
 # Second, we wait for Alice and Bob to connect on the page:
 
-print("Open your browser on pages http://localhost:8000/alice "
-      "and http://localhost:8000/bob")
+print("Open your browser on pages http://localhost:9000/alice "
+      "and http://localhost:9000/bob")
 
 print('Waiting for clients on pages /alice and /bob ...')
 import time
